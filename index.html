@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>Личная открытка</title>
+  <script>
+    const NAME = "Аиша"; // Имя, например «Алина»
+    const KEY = "secret2026"; // Ключ для ссылки в QR-коде
+    const keys = new URLSearchParams(location.search).getAll("access");
+    const openCard = keys.length === 1 && keys[0] === KEY;
+    if (openCard) {
+      document.documentElement.classList.add("open");
+      const fonts = document.createElement("link");
+      fonts.rel = "stylesheet";
+      fonts.href = "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;1,500&display=swap";
+      document.head.append(fonts);
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    :root { color-scheme: light; --ink: #482b36; --wine: #82374b; --hair: #d6b9af; }
+    body { margin: 0; color: var(--ink); background: #f9f2e9; font: 400 16px/1.7 Montserrat, Arial, sans-serif; }
+    #card, #sparks, #confetti { display: none; }
+    #locked { min-height: 100vh; min-height: 100svh; display: grid; place-content: center; padding: 24px; text-align: center; }
+    #locked p { max-width: 32ch; }
+    .open body { background: radial-gradient(ellipse at 92% 8%, #efc8bb, transparent 48%), linear-gradient(135deg, #fff9ee, #f7eae3 60%, #f0dacc); }
+    .open #locked { display: none; }
+    .open #card { display: block; position: relative; max-width: 860px; margin: auto; padding: clamp(22px, 5vw, 64px); }
+    .open #sparks, .open #confetti { display: block; position: fixed; inset: 0; pointer-events: none; }
+    #confetti { width: 100%; height: 100%; z-index: 5; }
+    #sparks i { position: absolute; color: #ac7754; animation: drift 6s ease-in-out infinite alternate; }
+    @keyframes drift { from { opacity: .14; transform: translateY(4px); } to { opacity: .6; transform: translateY(-14px); } }
+    h1, h2, h3 { font: 500 1em/1.15 "Playfair Display", Georgia, serif; margin: 0; }
+    h1 { font-size: clamp(40px, 7.3vw, 77px); letter-spacing: -.045em; overflow-wrap: anywhere; }
+    h1 span { font-size: .42em; vertical-align: top; }
+    h2 { font-size: clamp(31px, 5vw, 51px); letter-spacing: -.035em; }
+    p { margin: 0; }
+    .hero { display: grid; grid-template-columns: 1.55fr 1fr; align-items: center; gap: 24px; padding: 35px 0 48px; }
+    #wish, .intro { margin-top: 20px; max-width: 62ch; }
+    .art { display: grid; place-items: center; min-height: 200px; }
+    .envelope { position: relative; width: clamp(154px, 22vw, 235px); aspect-ratio: 1.55; transform: rotate(10deg); border-radius: 4px; background: linear-gradient(155deg,#ebc7ae,#d99d91); box-shadow: 8px 16px 22px #85443926; }
+    .envelope::before, .envelope::after { content: ""; position: absolute; inset: 0; }
+    .envelope::before { background: #f6d8c4; clip-path: polygon(0 100%,50% 32%,100% 100%); }
+    .envelope::after { background: linear-gradient(#ffe8d4,#edc3af); clip-path: polygon(0 0,100% 0,50% 63%); }
+    .seal { position: absolute; z-index: 1; top: 45%; left: 50%; transform: translateX(-50%); display: grid; place-items: center; width: 38px; height: 37px; border-radius: 47% 52% 45% 50%; background: #913d50; color: #ffddc7; border: 3px double #b96170; box-shadow: 1px 3px 5px #7338444d; }
+    .invitation { border-block: 1px solid var(--hair); padding: 36px 0; }
+    .details { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 24px; }
+    .detail { padding: 20px; border: 1px solid #fff9; border-radius: 15px; background: #fffaf480; backdrop-filter: blur(9px); }
+    .detail h3 { font-size: 24px; color: var(--wine); }
+    .detail p { font-size: 16px; margin-top: 9px; }
+    .reply { text-align: center; padding: 42px 0 28px; }
+    .reply h2 { font-size: clamp(29px, 4.2vw, 43px); text-wrap: balance; }
+    .actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; margin-top: 24px; }
+    button { min-height: 46px; padding: 10px 22px; border-radius: 30px; border: 1px solid var(--wine); font: 600 15px Montserrat, sans-serif; cursor: pointer; }
+    button:focus-visible { outline: 3px solid #604467; outline-offset: 4px; }
+    #yes { background: var(--wine); color: white; }
+    #no { background: #fff8f0; color: var(--wine); touch-action: none; }
+    #no.roaming { position: fixed; z-index: 4; transition: left .22s ease-out, top .22s ease-out; }
+    .hero, .invitation, .reply { animation: arrive .7s ease-out backwards; }
+    .invitation { animation-delay: .1s; }
+    .reply { animation-delay: .2s; }
+    @keyframes arrive { from { opacity: 0; } to { opacity: 1; } }
+    @media (max-width: 650px) {
+      .hero { grid-template-columns: 1fr; gap: 18px; padding: 8px 0 28px; }
+      .art { grid-row: 1; min-height: 138px; }
+      .details { grid-template-columns: 1fr; }
+      .detail { padding: 16px 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+    [hidden] { display: none !important; }
+
+    .open body { background: radial-gradient(ellipse at 0 10%, #7e414c, transparent 65%), #422a34; }
+    .open #card { padding: clamp(24px, 6vw, 64px); margin: 34px auto; background: linear-gradient(110deg,#fffaf0,#f5ead9); box-shadow: 0 24px 80px #1c0f2940; border: 1px solid #e3c6a1; }
+    .hero { display: block; padding: 0 0 38px; }
+    .salutation { font: italic 500 clamp(25px,4vw,35px)/1.4 "Playfair Display",Georgia,serif; color: var(--wine); margin-bottom: 24px; }
+    h1 { font-size: clamp(40px,7vw,66px); margin-bottom: 28px; }
+    .letter-body p { font: 500 clamp(19px,2.6vw,23px)/1.8 "Playfair Display",Georgia,serif; margin-top: 22px; }
+    .signature { font: italic 500 27px/1.5 "Playfair Display",Georgia,serif; color: var(--wine); margin-top: 30px; text-align: right; }
+    .invitation h2 { font-style: italic; }
+    .details { grid-template-columns: 1fr; }
+    .detail { display: grid; grid-template-columns: 130px 1fr; gap: 12px; }
+    .detail p { margin: 0; }
+    #sparks { z-index: 1; }
+    #sparks i { color: #c19466; }
+    @media(max-width:650px) {
+      .open #card { margin: 16px 12px; }
+      .detail { grid-template-columns: 1fr; gap: 8px; }
+      .signature { font-size: 25px; }
+      .letter-body p { line-height: 1.75; }
+    }
+  </style>
+</head>
+<body>
+  <div id="locked"><p>Доступ ограничен. Отсканируйте персональный QR-код</p></div>
+  <div id="sparks" aria-hidden="true"></div>
+  <main id="card">
+    <section class="hero">
+      <div class="letter">
+        <p class="salutation">Моя дорогая Аиша,</p>
+        <h1 id="title">С 18-летием! <span>✨</span></h1>
+        <div class="letter-body">
+          <p>Я люблю тебя. Мне так нравится твоя улыбка — от неё становится теплее на душе. Ты выглядишь завораживающе, и рядом с тобой даже самый обычный день становится особенным.</p>
+          <p>Поздравляю тебя с совершеннолетием, моя милая. Пусть твоя взрослая жизнь будет яркой и наполненной счастьем, тёплыми встречами и моментами, которые захочется бережно хранить в памяти.</p>
+          <p>Пусть рядом с тобой будут близкие и достойные люди, которые ценят тебя и заботятся о тебе. Желаю, чтобы все преграды были временными, а их преодоление делало тебя сильнее, увереннее и счастливее.</p>
+          <p>Мечтай смело, радуйся мелочам и почаще улыбайся. А я хочу быть рядом, поддерживать тебя и создавать вместе с тобой наши счастливые воспоминания.</p>
+        </div>
+        <p class="signature">С любовью,<br>твой Бахтияр</p>
+      </div>
+      
+    </section>
+    <section class="invitation">
+      <h2>День <em>вдвоём</em></h2>
+      <p class="intro">В честь этого особенного дня я хочу сделать тебе небольшой подарок — провести целый день только вдвоем.</p>
+      <div class="details">
+        <div class="detail"><h3>Когда</h3><p>Любой день, когда тебе будет удобно. Дату выберешь сама.</p></div>
+        <div class="detail"><h3>Программа</h3><p>Вкусная еда, прогулка, приятные сюрпризы и отличное настроение.</p></div>
+        <div class="detail"><h3>Дресс-код</h3><p>Твоя самая красивая улыбка и удобная одежда.</p></div>
+      </div>
+    </section>
+    <section class="reply">
+      <h2 id="question" tabindex="-1">Пойдем праздновать и гулять вдвоем?</h2>
+      <div class="actions" id="actions">
+        <button id="yes" type="button">Да, я согласна!</button>
+        <span id="slot"><button id="no" type="button">Нет</button></span>
+      </div>
+    </section>
+  </main>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <script>
+    if (openCard) {
+      const get = id => document.getElementById(id);
+      const yes = get("yes"), no = get("no"), slot = get("slot");
+      // Имя уже есть в обращении, заголовок оставляем коротким.
+      document.querySelector(".salutation").textContent = "Моя дорогая " + NAME + ",";
+      
+      for (let i = 0; i < 18; i++) {
+        const star = document.createElement("i");
+        star.textContent = "✦";
+        star.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;font-size:${7+Math.random()*8}px;animation-delay:-${Math.random()*6}s`;
+        get("sparks").append(star);
+      }
+
+      function dodge(event) {
+        if (event.cancelable) event.preventDefault();
+        const rect = no.getBoundingClientRect(), safe = yes.getBoundingClientRect();
+        const edge = 10;
+        const maxX = Math.max(edge, document.documentElement.clientWidth - rect.width - edge);
+        const maxY = Math.max(edge, window.innerHeight - rect.height - edge);
+        let best, bestDistance = -1;
+        for (let i = 0; i < 24; i++) {
+          const x = edge + Math.random() * (maxX - edge);
+          const y = edge + Math.random() * (maxY - edge);
+          if (x < safe.right+edge && x+rect.width > safe.left-edge &&
+              y < safe.bottom+edge && y+rect.height > safe.top-edge) continue;
+          const distance = Math.hypot(x - rect.left, y - rect.top);
+          if (distance > bestDistance) { best = {x, y}; bestDistance = distance; }
+        }
+        if (!best) return;
+        if (!no.classList.contains("roaming")) {
+          slot.style.width = rect.width + "px";
+          slot.style.height = rect.height + "px";
+          document.body.append(no);
+          no.classList.add("roaming");
+          no.style.left = rect.left + "px";
+          no.style.top = rect.top + "px";
+          no.getBoundingClientRect(); // Зафиксировать начальную позицию для плавного движения.
+        }
+        no.style.left = best.x + "px";
+        no.style.top = best.y + "px";
+      }
+      no.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") dodge(e); });
+      no.addEventListener("pointerdown", dodge);
+      no.addEventListener("click", dodge);
+      window.addEventListener("resize", () => {
+        if (no.classList.contains("roaming")) {
+          no.classList.remove("roaming");
+          no.removeAttribute("style");
+          slot.removeAttribute("style");
+          slot.append(no);
+        }
+      });
+
+      function celebrate() {
+        const canvas = get("confetti"), ctx = canvas.getContext("2d");
+        if (!ctx || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        const w = canvas.clientWidth, h = canvas.clientHeight;
+        const scale = Math.min(devicePixelRatio || 1, 2);
+        canvas.width = Math.round(w * scale);
+        canvas.height = Math.round(h * scale);
+        ctx.scale(scale, scale);
+        const colors = ["#a44260", "#e6ac58", "#ce7681", "#9484a5", "#e79876"];
+        const bits = Array.from({length: 145}, (_, i) => {
+          const side = i % 2;
+          return { x: w * (side ? .88 : .12), y: h * .78,
+            vx: (side ? -1 : 1) * (40 + Math.random() * w * .48),
+            vy: -h * (.62 + Math.random() * .55), spin: Math.random() * 9 - 4.5,
+            angle: Math.random() * 6, color: colors[i % colors.length] };
+        });
+        const start = performance.now();
+        function frame(now) {
+          const t = (now - start) / 1000;
+          ctx.clearRect(0, 0, w, h);
+          if (t >= 2.8) return;
+          ctx.globalAlpha = Math.min(1, (2.8 - t) / .6);
+          for (const b of bits) {
+            ctx.save();
+            ctx.translate(b.x + b.vx*t, b.y + b.vy*t + .44*h*t*t);
+            ctx.rotate(b.angle + b.spin*t);
+            ctx.fillStyle = b.color;
+            ctx.fillRect(-3, -1.5, 7, 3.5);
+            ctx.restore();
+          }
+          requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      }
+      yes.addEventListener("click", () => {
+        no.hidden = true;
+        get("actions").hidden = true;
+        const question = get("question");
+        question.textContent = "Ура! Напиши мне, в какой день тебе удобнее, и я всё организую ❤️";
+        question.focus({preventScroll: true});
+        celebrate();
+      }, {once: true});
+    }
+  </script>
+</body>
+</html>
